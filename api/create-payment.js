@@ -1,56 +1,55 @@
 const midtransClient = require('midtrans-client');
 
 module.exports = async (req, res) => {
+  // Hanya izinkan method POST
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Method Not Allowed' });
   }
 
-  const { username, whatsapp, productId, price, platform } = req.body;
-
-  if (!username || !productId || !price) {
-    return res.status(400).json({ success: false, message: 'Data tidak lengkap' });
-  }
-
   try {
-    // Inisialisasi Snap Midtrans
+    const { username, packageId, amount, itemTitle } = req.body;
+
+    if (!username || !amount) {
+      return res.status(400).json({ success: false, message: 'Username dan Amount wajib diisi!' });
+    }
+
+    // Inisialisasi Midtrans Snap Client
     const snap = new midtransClient.Snap({
-      isProduction: false, // Ubah ke 'true' jika sudah siap Production
-      serverKey: process.env.MIDTRANS_SERVER_KEY
+      isProduction: false, // Ubah ke true jika sudah live production
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+      clientKey: process.env.MIDTRANS_CLIENT_KEY,
     });
 
-    const orderId = 'MPX-' + Date.now();
+    const orderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
     const parameter = {
       transaction_details: {
         order_id: orderId,
-        gross_amount: Number(price)
+        gross_amount: Number(amount),
       },
       customer_details: {
         first_name: username,
-        phone: whatsapp
       },
       item_details: [
         {
-          id: productId,
-          price: Number(price),
+          id: packageId || 'DEFAULT-ITEM',
+          price: Number(amount),
           quantity: 1,
-          name: `${productId} (${platform.toUpperCase()})`.substring(0, 50)
-        }
-      ]
+          name: itemTitle || 'Rank Minecraft',
+        },
+      ],
     };
 
     const transaction = await snap.createTransaction(parameter);
 
-    // Midtrans mengembalikan 'redirect_url' untuk halaman pembayaran
     return res.status(200).json({
       success: true,
-      checkout_url: transaction.redirect_url
+      token: transaction.token,
+      redirect_url: transaction.redirect_url,
+      orderId: orderId,
     });
-  } catch (error) {
-    console.error('Midtrans Create Error:', error?.message || error);
-    return res.status(500).json({
-      success: false,
-      message: 'Gagal membuat transaksi ke Midtrans'
-    });
+  } catch (err) {
+    console.error('Error Create Payment:', err.message);
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
