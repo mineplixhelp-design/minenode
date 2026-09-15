@@ -1,0 +1,154 @@
+{
+  "ranks": {
+    "title": "VIP Ranks - Lets For Survive",
+    "breadcrumb": "VIP Ranks",
+    "notice": "Setiap Rank berlaku selamanya (Permanent) di server Survival Mineplix. Fitur langsung aktif setelah pembayaran dikonfirmasi.",
+    "items": [
+      {
+        "id": "rank-vip",
+        "title": "VIP Rank",
+        "price": "Rp 25.000",
+        "features": [
+          "Prefix [VIP] di Chat & Tab",
+          "Akses Command /fly di Claim Region",
+          "Maksimal 3 Sethome",
+          "Akses Virtual Workbench (/wb)",
+          "Priority Queue Join Server"
+        ]
+      },
+      {
+        "id": "rank-vip-plus",
+        "title": "VIP+ Rank",
+        "price": "Rp 50.000",
+        "features": [
+          "Prefix [VIP+] di Chat & Tab",
+          "Akses Command /fly di Semua World",
+          "Maksimal 6 Sethome",
+          "Akses Portable Enderchest (/enderchest)",
+          "Akses /hat & /nick dasar",
+          "Semua keuntungan VIP Rank"
+        ]
+      },
+      {
+        "id": "rank-mvp",
+        "title": "MVP Rank",
+        "price": "Rp 100.000",
+        "features": [
+          "Prefix [MVP] di Chat & Tab",
+          "Maksimal 12 Sethome",
+          "Akses Virtual Anvil (/anvil) & Grindstone",
+          "Akses Kustom Partikel (/particles)",
+          "Akses /feed & Keep EXP saat mati",
+          "Semua keuntungan VIP+ Rank"
+        ]
+      },
+      {
+        "id": "rank-mvp-plus",
+        "title": "MVP+ Rank",
+        "price": "Rp 175.000",
+        "features": [
+          "Prefix [MVP+] di Chat & Tab",
+          "Maksimal Unlimited Sethome",
+          "Akses Command /heal (Cooldown 5m)",
+          "Akses Kustom Color Chat & Formatting",
+          "Keep Inventory & Keep EXP saat mati",
+          "Semua keuntungan MVP Rank"
+        ]
+      }
+    ]
+  },
+  "keys": {
+    "title": "Crate Keys - Mineplix Crate",
+    "breadcrumb": "Crate Keys",
+    "notice": "Buka crate di Spawn untuk mendapatkan item langka, armor kuat, uang tunai, dan perk eksklusif!",
+    "items": [
+      {
+        "id": "key-common-3x",
+        "title": "3x Common Key",
+        "price": "Rp 10.000",
+        "features": [
+          "3x Key Crate Common",
+          "Hadiah: Ingame Money & Basic Tools",
+          "Drop Chance Item Enchantment: 25%"
+        ]
+      },
+      {
+        "id": "key-rare-5x",
+        "title": "5x Rare Key",
+        "price": "Rp 25.000",
+        "features": [
+          "5x Key Crate Rare",
+          "Hadiah: Armor Diamond & Spawner Fragment",
+          "Drop Chance Custom Enchants: 50%"
+        ]
+      },
+      {
+        "id": "key-epic-5x",
+        "title": "5x Epic Key",
+        "price": "Rp 45.000",
+        "features": [
+          "5x Key Crate Epic",
+          "Hadiah: Netherite Gear & Flying Book",
+          "Drop Chance Rare Artifact: 75%"
+        ]
+      },
+      {
+        "id": "key-legendary-3x",
+        "title": "3x Legendary Key",
+        "price": "Rp 75.000",
+        "features": [
+          "3x Key Crate Legendary",
+          "Hadiah: Custom God Items & Claim Blocks",
+          "Guaranteed High Tier Rewards"
+        ]
+      }
+    ]
+  },
+  "money": {
+    "title": "Server Money & Economy",
+    "breadcrumb": "Server Money",
+    "notice": "Tingkatkan perekonomian kamu di server untuk membeli barang di Player Shop atau klaim lahan yang lebih luas.",
+    "items": [
+      {
+        "id": "money-100k",
+        "title": "Pouch $100,000 Ingame Money",
+        "price": "Rp 15.000",
+        "features": [
+          "Saldo senilai $100.000 Ingame Cash",
+          "Bonus 1,000 Claim Blocks",
+          "Langsung dikirim via /balance"
+        ]
+      },
+      {
+        "id": "money-250k",
+        "title": "Pouch $250,000 Ingame Money",
+        "price": "Rp 30.000",
+        "features": [
+          "Saldo senilai $250.000 Ingame Cash",
+          "Bonus 3,000 Claim Blocks",
+          "Bonus 1x Rare Key Crate"
+        ]
+      },
+      {
+        "id": "money-600k",
+        "title": "Pouch $600,000 Ingame Money",
+        "price": "Rp 65.000",
+        "features": [
+          "Saldo senilai $600.000 Ingame Cash",
+          "Bonus 8,000 Claim Blocks",
+          "Bonus 2x Epic Key Crate"
+        ]
+      },
+      {
+        "id": "money-1500k",
+        "title": "Pouch $1,500,000 Ingame Money",
+        "price": "Rp 120.000",
+        "features": [
+          "Saldo senilai $1.500.000 Ingame Cash",
+          "Bonus 20,000 Claim Blocks",
+          "Bonus 2x Legendary Key Crate"
+        ]
+      }
+    ]
+  }
+}

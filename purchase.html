@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mineplix Store - Pembelian</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-main: #0b0c10;
+      --bg-container: #151821;
+      --bg-card: #1f2330;
+      --bg-hover: #2a2f40;
+      --bg-active: #32384d;
+      --text-main: #f0f2f5;
+      --text-muted: #8c96a6;
+      --line-color: #3a4154;
+      --primary: #7c75ff;
+      --primary-hover: #6a62ff;
+      --primary-light: #222538;
+      --danger: #ff5555;
+      --sidebar-width: 260px;
+      --transition-speed: 0.25s;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+
+      --nav-bg: rgba(255, 255, 255, 0.05);
+      --nav-hover-bg: rgba(255, 255, 255, 0.1);
+      --nav-active-text: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    }
+
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+    }
+
+    .mobile-menu-btn {
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 8px;
+      color: var(--text-main);
+      font-size: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .mobile-menu-btn i {
+      color: var(--text-main);
+    }
+
+    .app-container {
+      flex: 1;
+      display: flex;
+      height: 100%;
+      height: 100dvh;
+      background: var(--bg-container);
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 100%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      background: var(--bg-card);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      flex-shrink: 0;
+      will-change: transform;
+      transition: transform 0.25s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 30px;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 30px;
+    }
+
+    .sidebar-logo {
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 30px;
+    }
+
+    .close-sidebar-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 6px;
+      color: var(--text-main);
+      font-size: 18px;
+      line-height: 1;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .nav-tree-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      outline: none;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--nav-bg);
+      border-radius: var(--radius-sm);
+      width: 100%;
+      text-align: left;
+      border: none;
+      cursor: pointer;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-item:hover {
+      background: var(--nav-hover-bg);
+      color: var(--text-main);
+    }
+
+    .store-card {
+      margin-top: auto;
+      background: var(--primary-light);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-radius: var(--radius-md);
+    }
+
+    .store-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .store-info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.12);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .store-info-item strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .store-card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn-store {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      outline: none;
+      padding: 11px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: opacity 0.2s ease, background-color var(--transition-speed) ease;
+    }
+
+    .btn-store:hover {
+      background: var(--primary-hover);
+      opacity: 0.95;
+    }
+
+    .btn-store-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .btn-store-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .content-area {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .content-header {
+      padding: 24px 32px 0 32px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--text-main);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .content-body {
+      padding: 24px 32px 60px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .purchase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .purchase-card {
+      background: var(--bg-card);
+      padding: 20px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .purchase-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .product-price-highlight {
+      color: var(--primary);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .item-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .item-features li {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-features li i {
+      color: var(--primary);
+      font-size: 11px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .platform-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .platform-option {
+      background: var(--bg-container);
+      border: 1px solid var(--line-color);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .platform-option input[type="radio"] {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .platform-option.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--text-main);
+    }
+
+    .form-input {
+      background: var(--bg-container);
+      border: 1px solid var(--line-color);
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+    }
+
+    .form-input.invalid {
+      border-color: var(--danger) !important;
+    }
+
+    .callout-box {
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 12.5px;
+      line-height: 1.5;
+      background: var(--primary-light);
+      color: var(--text-main);
+      border-radius: var(--radius-md);
+    }
+
+    .callout-box i {
+      font-size: 16px;
+      margin-top: 2px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 2000;
+      border-radius: var(--radius-sm);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .mobile-header {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      padding: 0 16px;
+      background: var(--bg-container);
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .mobile-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 30px;
+    }
+
+    .mobile-logo {
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .mobile-brand span {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 30px;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100dvh;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1001;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .sidebar-overlay.show {
+      display: block;
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        padding-top: 60px;
+      }
+
+      .mobile-header {
+        display: flex;
+      }
+
+      .app-container {
+        margin: 0;
+        height: calc(100dvh - 60px);
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 85%;
+        max-width: 300px;
+        height: 100dvh;
+        z-index: 1002;
+        transform: translate3d(-100%, 0, 0);
+        padding: 15px 20px 40px 20px;
+      }
+
+      .sidebar.show {
+        transform: translate3d(0, 0, 0);
+      }
+
+      .close-sidebar-btn {
+        display: inline-flex;
+      }
+
+      .content-header {
+        padding: 16px 16px 0 16px;
+      }
+
+      .content-body {
+        padding: 16px 16px 80px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-header">
+    <div class="mobile-brand">
+      <img src="icon.png" alt="Mineplix" class="mobile-logo">
+      <span>Mineplix Store</span>
+    </div>
+    <button id="sidebarToggle" class="mobile-menu-btn">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-container">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <img src="icon.png" alt="Mineplix" class="sidebar-logo">
+          <h2>Mineplix Store</h2>
+        </div>
+        <button class="close-sidebar-btn" id="closeSidebarBtn">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-title">Navigasi</div>
+        <div class="nav-tree-container">
+          <a href="index.html" class="nav-item">
+            <span class="label"><i class="fa-solid fa-arrow-left"></i> Kembali ke Katalog</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="store-card">
+        <div class="store-info-list">
+          <div class="store-info-item">
+            <span>Java IP:</span>
+            <strong>play.mineplix.my.id</strong>
+          </div>
+          <div class="store-info-item">
+            <span>Bedrock Port:</span>
+            <strong>19132</strong>
+          </div>
+        </div>
+        <div class="store-card-actions">
+          <button class="btn-store" onclick="copyToClipboard('play.mineplix.my.id', 'IP Java berhasil disalin!')">
+            <i class="fa-solid fa-copy"></i> Copy IP Java
+          </button>
+          <button class="btn-store btn-store-secondary" onclick="copyToClipboard('19132', 'Port Bedrock berhasil disalin!')">
+            <i class="fa-solid fa-plug"></i> Copy Port Bedrock
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content-area">
+      <header class="content-header">
+        <div class="breadcrumb">
+          <a href="index.html">Mineplix Store</a> <span>/</span> <span>Form Pembelian</span>
+        </div>
+        <h1 class="page-title" id="pageTitle">Konfirmasi Pembelian</h1>
+      </header>
+
+      <div class="content-body" id="contentBody">
+        <p style="color: var(--text-muted);">Memuat data item...</p>
+      </div>
+    </main>
+
+  </div>
+
+  <div class="toast" id="toast">Berhasil disalin!</div>
+
+  <script>
+    async function initPurchase() {
+      const productId = window.location.hash.replace('#', '');
+      const contentBody = document.getElementById('contentBody');
+
+      if (!productId) {
+        contentBody.innerHTML = `
+          <div class="callout-box" style="background: rgba(255, 85, 85, 0.1); color: #ff5555;">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+              <strong>Produk Tidak Ditemukan</strong><br>
+              Silakan pilih produk terlebih dahulu melalui katalog utama.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const response = await fetch('produk.json');
+        if (!response.ok) throw new Error('Gagal memuat produk.json');
+        
+        const storeCategories = await response.json();
+        let selectedProduct = null;
+
+        for (const catKey in storeCategories) {
+          const item = storeCategories[catKey].items.find(i => i.id === productId);
+          if (item) {
+            selectedProduct = item;
+            break;
+          }
+        }
+
+        if (!selectedProduct) {
+          contentBody.innerHTML = `
+            <div class="callout-box" style="background: rgba(255, 85, 85, 0.1); color: #ff5555;">
+              <i class="fa-solid fa-circle-info"></i>
+              <div>
+                <strong>ID Produk Tidak Valid</strong><br>
+                Item yang kamu cari tidak ditemukan di sistem kami.
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        renderPurchaseForm(selectedProduct);
+      } catch (error) {
+        console.error(error);
+        contentBody.innerHTML = '<p style="color: #ff5555;">Gagal mengambil data dari produk.json.</p>';
+      }
+    }
+
+    function renderPurchaseForm(item) {
+      const contentBody = document.getElementById('contentBody');
+      const featuresList = item.features.map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join('');
+
+      contentBody.innerHTML = `
+        <div class="callout-box">
+          <i class="fa-solid fa-circle-info"></i>
+          <div>
+            <strong style="display:block; margin-bottom:2px;">Proses Pembelian Aman</strong>
+            <span>Pilih platform permainan dan isi username Minecraft dengan teliti sebelum melanjutkan.</span>
+          </div>
+        </div>
+
+        <div class="purchase-grid">
+          <div class="purchase-card">
+            <div class="purchase-card-title">
+              <span>Item Diminta</span>
+              <span class="product-price-highlight">${item.price}</span>
+            </div>
+            <div>
+              <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">${item.title}</h3>
+              <ul class="item-features">
+                ${featuresList}
+              </ul>
+            </div>
+          </div>
+
+          <div class="purchase-card">
+            <div class="purchase-card-title">
+              <span>Detail Informasi</span>
+            </div>
+            <form id="purchaseForm" novalidate onsubmit="processCheckout(event, '${item.title}')" style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="form-group">
+                <label>Platform Minecraft</label>
+                <div class="platform-selector">
+                  <label class="platform-option active" id="label-java">
+                    <input type="radio" name="platform" value="java" checked onchange="handlePlatformChange(this)">
+                    <span>Java Edition</span>
+                  </label>
+                  <label class="platform-option" id="label-bedrock">
+                    <input type="radio" name="platform" value="bedrock" onchange="handlePlatformChange(this)">
+                    <span>Bedrock Edition</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="username">Username Minecraft (IGN)</label>
+                <input type="text" id="username" class="form-input" placeholder="Masukkan Username..." oninput="removeError(this)">
+              </div>
+
+              <div class="form-group">
+                <label for="whatsapp">Nomor WhatsApp / Kontak</label>
+                <input type="tel" id="whatsapp" class="form-input" placeholder="08xxxxxxxxxx" oninput="removeError(this)">
+              </div>
+
+              <button type="submit" class="btn-store" style="margin-top: 6px;">
+                <i class="fa-solid fa-cart-shopping"></i> Bayar Sekarang
+              </button>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function handlePlatformChange(radio) {
+      const isBedrock = radio.value === 'bedrock';
+      const usernameInput = document.getElementById('username');
+      const labelJava = document.getElementById('label-java');
+      const labelBedrock = document.getElementById('label-bedrock');
+
+      if (isBedrock) {
+        labelBedrock.classList.add('active');
+        labelJava.classList.remove('active');
+        usernameInput.placeholder = "Contoh: .PlayerName";
+        if (usernameInput.value.trim() !== '' && !usernameInput.value.startsWith('.')) {
+          usernameInput.value = '.' + usernameInput.value;
+        }
+      } else {
+        labelJava.classList.add('active');
+        labelBedrock.classList.remove('active');
+        usernameInput.placeholder = "Contoh: PlayerName";
+        if (usernameInput.value.startsWith('.')) {
+          usernameInput.value = usernameInput.value.substring(1);
+        }
+      }
+    }
+
+    function removeError(input) {
+      input.classList.remove('invalid');
+    }
+
+    function processCheckout(event, title) {
+      event.preventDefault();
+
+      const platform = document.querySelector('input[name="platform"]:checked').value;
+      const usernameInput = document.getElementById('username');
+      const whatsappInput = document.getElementById('whatsapp');
+
+      let isValid = true;
+      let ign = usernameInput.value.trim();
+      let whatsapp = whatsappInput.value.trim();
+
+      if (!ign) {
+        usernameInput.classList.add('invalid');
+        isValid = false;
+      }
+
+      if (!whatsapp) {
+        whatsappInput.classList.add('invalid');
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      if (platform === 'bedrock' && !ign.startsWith('.')) {
+        ign = '.' + ign;
+        usernameInput.value = ign;
+      }
+
+      showToast(`Pemesanan ${title} (${platform.toUpperCase()}) untuk '${ign}' diproses!`);
+    }
+
+    function copyToClipboard(text, msg) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(msg);
+        });
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast(msg);
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+      if (!sidebar.classList.contains('show')) {
+        sidebar.classList.add('show');
+        sidebarOverlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeSidebarUI() {
+      sidebar.classList.remove('show');
+      sidebarOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
+    if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebarUI);
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebarUI);
+
+    window.addEventListener('hashchange', initPurchase);
+
+    initPurchase();
+  </script>
+</body>
+</html>
