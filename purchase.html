@@ -688,6 +688,9 @@
       const contentBody = document.getElementById('contentBody');
       const featuresList = item.features.map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join('');
 
+      // Mengambil nominal harga berbentuk angka saja (menghilangkan Rp / titik)
+      const numericPrice = item.price.replace(/[^0-9]/g, '') || 0;
+
       contentBody.innerHTML = `
         <div class="callout-box">
           <i class="fa-solid fa-circle-info"></i>
@@ -715,7 +718,7 @@
             <div class="purchase-card-title">
               <span>Detail Informasi</span>
             </div>
-            <form id="purchaseForm" novalidate onsubmit="processCheckout(event, '${item.title}')" style="display: flex; flex-direction: column; gap: 14px;">
+            <form id="purchaseForm" novalidate onsubmit="processCheckout(event, '${item.id}', ${numericPrice})" style="display: flex; flex-direction: column; gap: 14px;">
               <div class="form-group">
                 <label>Platform Minecraft</label>
                 <div class="platform-selector">
@@ -740,7 +743,7 @@
                 <input type="tel" id="whatsapp" class="form-input" placeholder="08xxxxxxxxxx" oninput="removeError(this)">
               </div>
 
-              <button type="submit" class="btn-store" style="margin-top: 6px;">
+              <button type="submit" id="btnSubmit" class="btn-store" style="margin-top: 6px;">
                 <i class="fa-solid fa-cart-shopping"></i> Bayar Sekarang
               </button>
             </form>
@@ -776,12 +779,13 @@
       input.classList.remove('invalid');
     }
 
-    function processCheckout(event, title) {
+    async function processCheckout(event, productId, price) {
       event.preventDefault();
 
       const platform = document.querySelector('input[name="platform"]:checked').value;
       const usernameInput = document.getElementById('username');
       const whatsappInput = document.getElementById('whatsapp');
+      const btnSubmit = document.getElementById('btnSubmit');
 
       let isValid = true;
       let ign = usernameInput.value.trim();
@@ -804,7 +808,44 @@
         usernameInput.value = ign;
       }
 
-      showToast(`Pemesanan ${title} (${platform.toUpperCase()}) untuk '${ign}' diproses!`);
+      // Tampilkan status loading
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+      showToast("Menghubungkan ke API Gateway...");
+
+      try {
+        // Panggil Vercel Serverless API /api/create-payment
+        const response = await fetch('/api/create-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: ign,
+            whatsapp: whatsapp,
+            productId: productId,
+            price: Number(price),
+            platform: platform,
+            method: 'QRIS'
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.checkout_url) {
+          showToast("Mengarahkan ke pembayaran...");
+          window.location.href = result.checkout_url;
+        } else {
+          showToast(result.message || "Gagal membuat transaksi.");
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> Bayar Sekarang';
+        }
+      } catch (error) {
+        console.error("Checkout Error:", error);
+        showToast("Terjadi kesalahan koneksi server!");
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> Bayar Sekarang';
+      }
     }
 
     function copyToClipboard(text, msg) {
