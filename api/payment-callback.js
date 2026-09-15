@@ -1,23 +1,44 @@
 const axios = require('axios');
+const midtransClient = require('midtrans-client');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Method Not Allowed' });
   }
 
-  const callbackData = req.body;
+  try {
+    const apiClient = new midtransClient.Snap({
+      isProduction: false, // Ubah ke 'true' jika sudah siap Production
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+      clientKey: process.env.MIDTRANS_CLIENT_KEY
+    });
 
-  if (callbackData && callbackData.status === 'PAID') {
-    const username = callbackData.customer_name;
-    const item = callbackData.order_items[0];
+    const notificationJson = req.body;
+    
+    // Verifikasi status transaksi dari server Midtrans
+    const statusResponse = await apiClient.transaction.notification(notificationJson);
 
-    try {
+    const orderId = statusResponse.order_id;
+    const transactionStatus = statusResponse.transaction_status;
+    const fraudStatus = statusResponse.fraud_status;
+
+    // Cek jika pembayaran berhasil lunas
+    const isPaid = 
+      transactionStatus === 'settlement' || 
+      (transactionStatus === 'capture' && fraudStatus === 'accept');
+
+    if (isPaid) {
+      // Ambil username dari detail order
+      const username = statusResponse.customer_details?.first_name || 'Player';
+      const grossAmount = Number(statusResponse.gross_amount);
+
+      // Kirim notifikasi ke CraftingStore API
       await axios.post(
         'https://api.craftingstore.net/v1/payments',
         {
-          packageName: item.name,
+          packageName: `Order ${orderId}`,
           username: username,
-          price: item.price,
+          price: grossAmount,
           status: 'PAID'
         },
         {
@@ -28,12 +49,12 @@ module.exports = async (req, res) => {
         }
       );
 
-      return res.status(200).json({ success: true, message: 'Payment sent to CraftingStore' });
-    } catch (err) {
-      console.error('CraftingStore Error:', err?.response?.data || err.message);
-      return res.status(500).json({ success: false, message: 'Failed to notify CraftingStore' });
+      return res.status(200).json({ success: true, message: 'Payment processed and sent to CraftingStore' });
     }
-  }
 
-  return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, message: 'Transaction status received' });
+  } catch (err) {
+    console.error('Callback Error:', err?.response?.data || err.message);
+    return res.status(500).json({ success: false, message: 'Failed to process callback' });
+  }
 };
