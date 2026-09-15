@@ -688,14 +688,14 @@
       const contentBody = document.getElementById('contentBody');
       const featuresList = item.features.map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join('');
 
-      // Mengambil nominal harga berbentuk angka saja (menghilangkan Rp / titik)
+      // Mengambil nominal harga berbentuk angka saja
       const numericPrice = item.price.replace(/[^0-9]/g, '') || 0;
 
       contentBody.innerHTML = `
         <div class="callout-box">
           <i class="fa-solid fa-circle-info"></i>
           <div>
-            <strong style="display:block; margin-bottom:2px;">Proses Pembelian Aman</strong>
+            <strong style="display:block; margin-bottom:2px;">Proses Pembelian Aman via Midtrans</strong>
             <span>Pilih platform permainan dan isi username Minecraft dengan teliti sebelum melanjutkan.</span>
           </div>
         </div>
@@ -707,7 +707,7 @@
               <span class="product-price-highlight">${item.price}</span>
             </div>
             <div>
-              <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">${item.title}</h3>
+              <h3 id="itemTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">${item.title}</h3>
               <ul class="item-features">
                 ${featuresList}
               </ul>
@@ -786,6 +786,7 @@
       const usernameInput = document.getElementById('username');
       const whatsappInput = document.getElementById('whatsapp');
       const btnSubmit = document.getElementById('btnSubmit');
+      const itemTitleElement = document.getElementById('itemTitle');
 
       let isValid = true;
       let ign = usernameInput.value.trim();
@@ -811,7 +812,7 @@
       // Tampilkan status loading
       btnSubmit.disabled = true;
       btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
-      showToast("Menghubungkan ke API Gateway...");
+      showToast("Menghubungkan ke Gateway Midtrans...");
 
       try {
         // Panggil Vercel Serverless API /api/create-payment
@@ -823,18 +824,19 @@
           body: JSON.stringify({
             username: ign,
             whatsapp: whatsapp,
-            productId: productId,
-            price: Number(price),
-            platform: platform,
-            method: 'QRIS'
+            packageId: productId,
+            amount: Number(price),
+            itemTitle: itemTitleElement ? itemTitleElement.innerText : 'Rank Minecraft',
+            platform: platform
           })
         });
 
         const result = await response.json();
 
-        if (result.success && result.checkout_url) {
-          showToast("Mengarahkan ke pembayaran...");
-          window.location.href = result.checkout_url;
+        // Mengarahkan langsung ke halaman pembayaran Midtrans Snap
+        if (result.success && result.redirect_url) {
+          showToast("Mengarahkan ke Midtrans...");
+          window.location.href = result.redirect_url;
         } else {
           showToast(result.message || "Gagal membuat transaksi.");
           btnSubmit.disabled = false;
